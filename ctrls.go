@@ -5,6 +5,7 @@ import "encoding/json"
 import "os/user"
 import "runtime"
 import "fmt"
+import "path"
 
 func parselocation(location string) string {
 
@@ -25,7 +26,13 @@ func parselocation(location string) string {
 		} else {
 			location = location[2:]
 		}
-		location = user.HomeDir+location
+		location = user.HomeDir+"/"+location
+	}
+	
+	
+	if _, err := os.Stat(path.Dir(location)); os.IsNotExist(err) {
+		// path/to/whatever does not exist
+		os.MkdirAll(path.Dir(location))
 	}
 	
 	return location
@@ -37,7 +44,7 @@ func Load(value interface{}, location string) {
 	
 	file, err := os.Open(location)
 	if err != nil {
-		fmt.Println("ctrls: ", err)
+		//fmt.Println("ctrls: ", err)
 		return
 	}
 
@@ -45,7 +52,7 @@ func Load(value interface{}, location string) {
 	
 	err = dec.Decode(value)
 	if err != nil {
-		fmt.Println("ctrls: ", err)
+		//fmt.Println("ctrls: ", err)
 		return
 	}
 }
