@@ -2,25 +2,24 @@ package ctrls
 
 import "os"
 import "encoding/json"
-import "err"
-import "strings"
 import "os/user"
 import "runtime"
+import "fmt"
 
 func parselocation(location string) string {
 
 	user, err := user.Current()
 	if err != nil {
 		fmt.Println("ctrls: ", err)
-		return
+		return ""
 	}
 	
 	if len(location) == 0 {
 		fmt.Println("ctrls: missing location")
-		return
+		return ""
 	}
 
-	if location[0] == "~" {
+	if location[0] == '~' {
 		if runtime.GOOS == "linux" { 
 			location = "."+location[2:]
 		} else {
@@ -66,7 +65,7 @@ func Save(value interface{}, location string) {
 		return
 	}
 	
-	err := file.Write(data)
+	_, err = file.Write(data)
 	if err != nil {
 		fmt.Println("ctrls: ", err)
 		return
