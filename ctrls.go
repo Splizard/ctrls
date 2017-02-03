@@ -32,7 +32,7 @@ func parselocation(location string) string {
 	
 	if _, err := os.Stat(path.Dir(location)); os.IsNotExist(err) {
 		// path/to/whatever does not exist
-		os.MkdirAll(path.Dir(location))
+		os.MkdirAll(path.Dir(location), 0700)
 	}
 	
 	return location
